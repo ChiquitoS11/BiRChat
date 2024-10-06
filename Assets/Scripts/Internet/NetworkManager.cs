@@ -46,6 +46,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         Quaternion spawnOrientacion = Quaternion.identity; // la orientacion donde mira el jugador (inicia mirando a donde mira el muñeco de unity)
 
         // instanciar al jugador
-        PhotonNetwork.Instantiate("Character", spawnPosition, spawnOrientacion, 0);
+        PhotonNetwork.Instantiate("Player", spawnPosition, spawnOrientacion);
     }
 }

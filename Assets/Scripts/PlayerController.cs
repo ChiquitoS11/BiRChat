@@ -2,49 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Unity.VisualScripting;
 
-public class MovementPlayer : MonoBehaviourPunCallbacks, IPunObservable
+public class MovementPlayer : MonoBehaviourPunCallbacks
 {
     CharacterController cc;
-    private Vector3 networkPosition;
+    private float gravity = 9.8f;
+    private float speed = 5f;
+    private float jumpForce = 5f;
+    Vector3 movimiento;
 
     private void Start()
     {
         cc = GetComponent<CharacterController>();
-        networkPosition = transform.position; // Inicializa la posición de red
     }
 
     void Update()
     {
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
-            // Sincronización de la posición del jugador
-            transform.position = Vector3.MoveTowards(transform.position, networkPosition, Time.deltaTime * 10);
-            return;
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            float moveVertical = Input.GetAxis("Vertical");
+
+            movimiento = (new Vector3(moveHorizontal, 0.0f, moveVertical)).normalized;
+
+            SetGravity();
+            cc.Move(movimiento * speed * Time.deltaTime);
         }
 
-        float moveSpeed = 5f;
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-        Vector3 movement = (new Vector3(moveHorizontal, 0.0f, moveVertical)).normalized;
-
-        cc.Move(movement * moveSpeed * Time.deltaTime);
-
-        // Actualiza la posición de red
-        networkPosition = transform.position;
+        
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void SetGravity()
     {
-        if (stream.IsWriting)
-        {
-            // Enviar la posición al otro jugador
-            stream.SendNext(transform.position);
-        }
-        else
-        {
-            // Recibir la posición del otro jugador
-            networkPosition = (Vector3)stream.ReceiveNext();
-        }
+        movimiento.y = -gravity * Time.deltaTime;
     }
 }
