@@ -37,8 +37,11 @@ public class PlayerControllerModel : MonoBehaviour
         desplazamiento.x = movimiento.x;
         desplazamiento.z = movimiento.z;
 
+
         // Mover càmara con el personaje
         CamDirecction(movimiento);
+
+
 
         // Mover el Character Controller
         cc.Move(desplazamiento * Time.deltaTime);
@@ -46,11 +49,23 @@ public class PlayerControllerModel : MonoBehaviour
         animator.SetFloat("VelX", horizontal);
         animator.SetFloat("VelY", vertical);
 
+        
+
         AccionesVarias();
     }
 
     private void AccionesVarias()
     {
+        Debug.Log(cc.isGrounded);
+        if (!cc.isGrounded)
+        {
+            animator.SetBool("isJump", false);
+        } 
+        if (cc.isGrounded)
+        {
+            animator.SetBool("isJump", true);
+        }
+
 
         if (Input.GetKey("f"))
         {
@@ -58,7 +73,7 @@ public class PlayerControllerModel : MonoBehaviour
             animator.Play("Muerte");
         }
 
-        if (Input.GetKey("g"))
+        if (Input.GetKey("g"))  
         {
             animator.SetBool("Other", false);
             animator.Play("Perdida");
@@ -86,7 +101,9 @@ public class PlayerControllerModel : MonoBehaviour
     {
         if (cc.isGrounded)
         {
-            desplazamiento.y = 0; // Resetear gravedad si está en el suelo
+            animator.SetBool("isJump", false);
+           // desplazamiento.y = 0; // Resetear gravedad si está en el suelo
+
             if (Input.GetButton("Jump") && !isJump)
             {
                 isJump = true;
@@ -98,6 +115,10 @@ public class PlayerControllerModel : MonoBehaviour
                 isJump = false;
             }
 
+        }
+        else
+        {
+           
         }
     }
 
