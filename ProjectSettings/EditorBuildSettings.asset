@@ -6,6 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Start.unity
+    path: Assets/Scenes/UI/Start.unity
     guid: 9f2b431bc315a1c4faf77bf24cc829fc
+  - enabled: 1
+    path: Assets/Scenes/UI/Lobby.unity
+    guid: 30c30dcda1340f84c9579905334596c5
+  - enabled: 1
+    path: Assets/Scenes/UI/Ajustes.unity
+    guid: ffdd7fa1454ee4b4b88a00d6fac86540
+  - enabled: 1
+    path: Assets/Scenes/UI/CreateLobby.unity
+    guid: 34fa38a516c604b48beae6e677faa485
+  - enabled: 1
+    path: Assets/Scenes/Game/CuartoPrincipal.unity
+    guid: 50962e25af3fedd4ca14bf91588655b1
   m_configObjects: {}
