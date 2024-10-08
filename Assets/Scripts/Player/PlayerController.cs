@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,12 +12,14 @@ public class PlayerController : MonoBehaviour
     public float speed = 10f;
     public float JumpForce = 5f;
     public Vector3 movimiento;
-    public bool salto;
+    public bool saltar;
+    public bool puedoSaltar;
     public bool isGrounded;
 
     // Start is called before the first frame update
     void Start()
     {
+        isGrounded = true;
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
     }
@@ -26,21 +29,22 @@ public class PlayerController : MonoBehaviour
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+        animator.SetFloat("VelX", horizontal);
+        animator.SetFloat("VelY", vertical);
 
         movimiento = new Vector3(horizontal, 0, vertical).normalized;
 
-        salto = Input.GetButtonDown("Jump") ? true : false;
+        saltar = Input.GetButtonDown("Jump") ? true : false;
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(transform.position + movimiento * speed * Time.deltaTime);
+        rb.MovePosition(rb.position + movimiento * speed * Time.fixedDeltaTime);
 
-        if (salto)
+        if (saltar)
         {
             Jump();
         }
-
     }
 
     private void Jump()
@@ -48,13 +52,19 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             rb.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+            animator.SetBool("isJump", true);
         }
         else
         {
-
+            animator.SetBool("isJump", false);
         }
 
     }
+
+    //private void Cayendo()
+    //{
+    //    animator.SetBool("isFalling", true);
+    //}
 
     void OnCollisionEnter(Collision collision)
     {
